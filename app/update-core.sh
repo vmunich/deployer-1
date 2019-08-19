@@ -7,26 +7,34 @@ update_core_handle()
 	echo $UPSTREAM_VERSION
 	echo $BRIDGECHAIN_PATH
 
+	update_core_add_upstream_remote
+
+	update_core_merge_from_upstream
+
+	update_core_resolve_conflicts
+
+	update_core_change_block_reward_from_number_to_string
+
 	# update_core_check_bridgechain_version
 
-	heading "Bridgechain version: $CHAIN_VERSION"
-	read -p "Would you like to update Core to version "$UPSTREAM_VERSION"? [y/N]: " choice
+	# heading "Bridgechain version: $CHAIN_VERSION"
+	# read -p "Would you like to update Core to version "$UPSTREAM_VERSION"? [y/N]: " choice
 
-	if [[ "$choice" =~ ^(yes|y|Y) ]]; then
-	    choice=""
-	    while [[ ! "$choice" =~ ^(yes|y|Y) ]] ; do
+	# if [[ "$choice" =~ ^(yes|y|Y) ]]; then
+	#     choice=""
+	#     while [[ ! "$choice" =~ ^(yes|y|Y) ]] ; do
 
-	    	update_core_add_upstream_remote
+	#     	update_core_add_upstream_remote
 
-	    	update_core_merge_from_upstream
+	#     	update_core_merge_from_upstream
 
-	    	update_core_resolve_conflicts
+	#     	update_core_resolve_conflicts
 
-	    	update_core_change_block_reward_from_number_to_string
+	#     	update_core_change_block_reward_from_number_to_string
 
-	        # read -p "Proceed? [y/N]: " choice
-	    done
-	fi
+	#         # read -p "Proceed? [y/N]: " choice
+	#     done
+	# fi
 
 	# cd $BRIDGECHAIN_PATH
 	# git checkout -b update/"$UPSTREAM_VERSION"
