@@ -9,6 +9,25 @@ update_core_handle()
 
 	update_core_check_bridgechain_version
 
+	heading "Bridgechain version: $CHAIN_VERSION"
+	read -p "Would you like to update Core to version "$UPSTREAM_VERSION"? [y/N]: " choice
+
+	if [[ "$choice" =~ ^(yes|y|Y) ]]; then
+	    choice=""
+	    while [[ ! "$choice" =~ ^(yes|y|Y) ]] ; do
+
+	    	update_core_add_upstream_remote
+
+	    	update_core_merge_from_upstream
+
+	    	update_core_resolve_conflicts
+
+	    	update_core_change_block_reward_from_number_to_string
+
+	        # read -p "Proceed? [y/N]: " choice
+	    done
+	fi
+
 	# cd $BRIDGECHAIN_PATH
 	# git checkout -b update/"$UPSTREAM_VERSION"
 	# git merge upstream/master
@@ -29,17 +48,9 @@ update_core_resolve_vars()
 	CHAIN_VERSION=$(jq -r '.version' $HOME/core-bridgechain/packages/core/package.json)
 }
 
-update_core_add_upstream_remote()
-{
-	heading "Fetching from upstream..."
-	cd $HOME/core-bridgechain
-	git remote add upstream https://github.com/ArkEcosystem/core.git > /dev/null 2>&1
-	git fetch upstream
-}
-
 update_core_check_bridgechain_version()
 {
-	heading "Bridgechain version: '$CHAIN_VERSION'"
+	heading "Bridgechain version: $CHAIN_VERSION"
 	read -p "Would you like to update Core to version "$UPSTREAM_VERSION"? [y/N]: " choice
 
 	if [[ "$choice" =~ ^(yes|y|Y) ]]; then
@@ -51,8 +62,25 @@ update_core_check_bridgechain_version()
 	fi
 }
 
+update_core_add_upstream_remote()
+{
+	heading "Fetching from upstream..."
+	cd $HOME/core-bridgechain
+	git remote add upstream https://github.com/ArkEcosystem/core.git > /dev/null 2>&1
+	git fetch upstream
+}
+
+update_core_merge_from_upstream()
+{
+	heading "Merging from upstream..."
+	git checkout -b update/"$UPSTREAM_VERSION"
+	git merge upstream/master
+}
+
+
 update_core_resolve_conflicts()
 {
+	heading "Resolving merge conflicts..."
 	git checkout --ours packages/crypto/src/networks/devnet/genesisBlock.json
 	git checkout --ours packages/crypto/src/networks/devnet/milestones.json
 	git checkout --ours packages/crypto/src/networks/mainnet/exceptions.json
