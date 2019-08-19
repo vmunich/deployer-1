@@ -4,17 +4,20 @@ update_core_handle()
 {
 	local UPSTREAM_VERSION=$(curl -s https://raw.githubusercontent.com/ArkEcosystem/core/master/packages/core/package.json | jq -r '.version')
 	
-	cd $HOME/core-bridgechain
-	git checkout -b update/"$UPSTREAM_VERSION"
-	git merge upstream/master
+	echo $UPSTREAM_VERSION
+	echo $BRIDGECHAIN_PATH
 
-	update_core_resolve_conflicts
-	update_core_change_block_reward_from_number_to_string
-	update_core_update_package_json
+	# cd $HOME/core-bridgechain
+	# git checkout -b update/"$UPSTREAM_VERSION"
+	# git merge upstream/master
 
-	git add --all
-	git commit --no-verify -m 'chore: upgrade bridgechain'
-	git push --no-verify
+	# update_core_resolve_conflicts
+	# update_core_change_block_reward_from_number_to_string
+	# update_core_update_package_json
+
+	# git add --all
+	# git commit --no-verify -m 'chore: upgrade bridgechain'
+	# git push --no-verify
 
 }
 
@@ -39,7 +42,7 @@ update_core_check_bridgechain_version()
 	#     	#
 	#         read -p "Proceed? [y/N]: " choice
 	#     done
-	fi
+	#fi
 }
 
 update_core_resolve_conflicts()
