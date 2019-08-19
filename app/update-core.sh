@@ -39,7 +39,7 @@ update_core_add_upstream_remote()
 
 update_core_check_bridgechain_version()
 {
-	heading Bridgechain version: "$CHAIN_VERSION"
+	heading "Bridgechain version: '$CHAIN_VERSION'"
 	read -p "Would you like to update Core to version "$UPSTREAM_VERSION"? [y/N]: " choice
 
 	if [[ "$choice" =~ ^(yes|y|Y) ]]; then
