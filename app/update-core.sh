@@ -105,12 +105,20 @@ update_core_resolve_conflicts()
 
 update_core_change_block_reward_from_number_to_string()
 {
-	tmp=$(mktemp)
-	jq '.reward = "0"' packages/crypto/src/networks/mainnet/genesisBlock.json > "$tmp" && mv "$tmp" packages/crypto/src/networks/mainnet/genesisBlock.json
-	tmp=$(mktemp)
-	jq '.reward = "0"' packages/crypto/src/networks/devnet/genesisBlock.json > "$tmp" && mv "$tmp" packages/crypto/src/networks/devnet/genesisBlock.json
-	tmp=$(mktemp)
-	jq '.reward = "0"' packages/crypto/src/networks/testnet/genesisBlock.json > "$tmp" && mv "$tmp" packages/crypto/src/networks/testnet/genesisBlock.json
+	jq '.reward = "0"' packages/crypto/src/networks/mainnet/genesisBlock.json \
+	> packages/crypto/src/networks/mainnet/genesisBlock.json.tmp \
+	&& mv packages/crypto/src/networks/mainnet/genesisBlock.json.tmp \
+	packages/crypto/src/networks/mainnet/genesisBlock.json
+
+	jq '.reward = "0"' packages/crypto/src/networks/devnet/genesisBlock.json \
+	> packages/crypto/src/networks/devnet/genesisBlock.json.tmp \
+	&& mv packages/crypto/src/networks/devnet/genesisBlock.json.tmp \
+	packages/crypto/src/networks/devnet/genesisBlock.json
+
+	jq '.reward = "0"' packages/crypto/src/networks/testnet/genesisBlock.json \
+	> packages/crypto/src/networks/testnet/genesisBlock.json.tmp \
+	&& mv packages/crypto/src/networks/testnet/genesisBlock.json.tmp \
+	packages/crypto/src/networks/testnet/genesisBlock.json
 }
 
 update_core_update_package_json()
