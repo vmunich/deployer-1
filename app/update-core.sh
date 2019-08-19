@@ -35,18 +35,18 @@ update_core_add_upstream_remote()
 	git fetch upstream
 }
 
-update_core_check_bridgechain_version()
-{
-	# read -p "Would you like to update your bridgechain? [y/N]: " choice
+# update_core_check_bridgechain_version()
+# {
+# 	read -p "Would you like to update your bridgechain? [y/N]: " choice
 
-	# if [[ "$choice" =~ ^(yes|y|Y) ]]; then
-	#     choice=""
-	#     while [[ ! "$choice" =~ ^(yes|y|Y) ]] ; do
-	#     	#
-	#         read -p "Proceed? [y/N]: " choice
-	#     done
-	#fi
-}
+# 	if [[ "$choice" =~ ^(yes|y|Y) ]]; then
+# 	    choice=""
+# 	    while [[ ! "$choice" =~ ^(yes|y|Y) ]] ; do
+# 	    	#
+# 	        read -p "Proceed? [y/N]: " choice
+# 	    done
+# 	fi
+# }
 
 update_core_resolve_conflicts()
 {
