@@ -2,12 +2,12 @@
 
 update_core_handle()
 {
-	local UPSTREAM_VERSION=$(curl -s https://raw.githubusercontent.com/ArkEcosystem/core/master/packages/core/package.json | jq -r '.version')
+	update_core_resolve_vars
 	
 	echo $UPSTREAM_VERSION
 	echo $BRIDGECHAIN_PATH
 
-	# cd $HOME/core-bridgechain
+	# cd $BRIDGECHAIN_PATH
 	# git checkout -b update/"$UPSTREAM_VERSION"
 	# git merge upstream/master
 
@@ -21,6 +21,12 @@ update_core_handle()
 
 }
 
+update_core_resolve_vars()
+{
+	UPSTREAM_VERSION=$(curl -s https://raw.githubusercontent.com/ArkEcosystem/core/master/packages/core/package.json | jq -r '.version')
+	CHAIN_VERSION=$(jq -r '.version' $HOME/core-bridgechain/packages/core/package.json)
+}
+
 update_core_add_upstream_remote()
 {
 	heading "Fetching from upstream..."
@@ -31,9 +37,6 @@ update_core_add_upstream_remote()
 
 update_core_check_bridgechain_version()
 {
-	local CHAIN_VERSION=$(jq -r '.version' $HOME/core-bridgechain/packages/core/package.json)
-	local UPSTREAM_VERSION=$(curl -s https://raw.githubusercontent.com/ArkEcosystem/core/master/packages/core/package.json | jq -r '.version')
-
 	# read -p "Would you like to update your bridgechain? [y/N]: " choice
 
 	# if [[ "$choice" =~ ^(yes|y|Y) ]]; then
