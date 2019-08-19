@@ -4,14 +4,13 @@ update_core_handle()
 {
 	update_core_resolve_vars
 
-	echo $UPSTREAM_VERSION
-	echo $BRIDGECHAIN_PATH
-
 	update_core_add_upstream_remote || true
 
 	update_core_merge_from_upstream || true
 
 	update_core_resolve_conflicts
+
+	heading "Applying migration updates..."
 
 	update_core_change_block_reward_from_number_to_string
 
