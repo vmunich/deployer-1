@@ -7,6 +7,8 @@ update_core_handle()
 	echo $UPSTREAM_VERSION
 	echo $BRIDGECHAIN_PATH
 
+	update_core_check_bridgechain_version
+
 	# cd $BRIDGECHAIN_PATH
 	# git checkout -b update/"$UPSTREAM_VERSION"
 	# git merge upstream/master
