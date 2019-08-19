@@ -7,9 +7,9 @@ update_core_handle()
 	echo $UPSTREAM_VERSION
 	echo $BRIDGECHAIN_PATH
 
-	update_core_add_upstream_remote
+	update_core_add_upstream_remote || true
 
-	update_core_merge_from_upstream
+	update_core_merge_from_upstream || true
 
 	update_core_resolve_conflicts
 
