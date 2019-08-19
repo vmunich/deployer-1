@@ -7,7 +7,7 @@ update_core_handle()
 	echo $UPSTREAM_VERSION
 	echo $BRIDGECHAIN_PATH
 
-	update_core_check_bridgechain_version
+	# update_core_check_bridgechain_version
 
 	heading "Bridgechain version: $CHAIN_VERSION"
 	read -p "Would you like to update Core to version "$UPSTREAM_VERSION"? [y/N]: " choice
@@ -60,6 +60,7 @@ update_core_check_bridgechain_version()
 	        read -p "Proceed? [y/N]: " choice
 	    done
 	fi
+	info "Done"
 }
 
 update_core_add_upstream_remote()
@@ -75,6 +76,7 @@ update_core_merge_from_upstream()
 	heading "Merging from upstream..."
 	git checkout -b update/"$UPSTREAM_VERSION"
 	git merge upstream/master
+	info "Done"
 }
 
 
@@ -91,6 +93,7 @@ update_core_resolve_conflicts()
 	git checkout --theirs packages/core/bin/config/mainnet/plugins.js
 	git checkout --theirs packages/core/bin/config/testnet/plugins.js
 	git checkout --ours install.sh
+	info "Done"
 }
 
 update_core_change_block_reward_from_number_to_string()
