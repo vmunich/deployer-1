@@ -14,34 +14,13 @@ update_core_handle()
 
 	update_core_change_block_reward_from_number_to_string
 
-	# update_core_check_bridgechain_version
+	update_core_update_package_json
 
-	# heading "Bridgechain version: $CHAIN_VERSION"
-	# read -p "Would you like to update Core to version "$UPSTREAM_VERSION"? [y/N]: " choice
+	heading "Done"
 
-	# if [[ "$choice" =~ ^(yes|y|Y) ]]; then
-	#     choice=""
-	#     while [[ ! "$choice" =~ ^(yes|y|Y) ]] ; do
+	heading "Building Core..."
 
-	#     	update_core_add_upstream_remote
-
-	#     	update_core_merge_from_upstream
-
-	#     	update_core_resolve_conflicts
-
-	#     	update_core_change_block_reward_from_number_to_string
-
-	#         # read -p "Proceed? [y/N]: " choice
-	#     done
-	# fi
-
-	# cd $BRIDGECHAIN_PATH
-	# git checkout -b update/"$UPSTREAM_VERSION"
-	# git merge upstream/master
-
-	# update_core_resolve_conflicts
-	# update_core_change_block_reward_from_number_to_string
-	# update_core_update_package_json
+	yarn setup
 
 	# git add --all
 	# git commit --no-verify -m 'chore: upgrade bridgechain'
@@ -124,23 +103,25 @@ update_core_change_block_reward_from_number_to_string()
 update_core_update_package_json()
 {
 	oldPackageJson=$(mktemp)
-	git checkout --ours packages/core/package.json && cat packages/core/package.json > "$oldPackageJson" && git checkout --theirs packages/core/package.json
+	
+	git checkout --ours packages/core/package.json && cat packages/core/package.json > "$oldPackageJson" \
+	&& git checkout --theirs packages/core/package.json
 
-	tmp=$(mktemp)
-	jq --arg var "$(jq -r '.name' "$oldPackageJson")" '.name = $var' packages/core/package.json > "$tmp" && mv "$tmp" packages/core/package.json
+	jq --arg var "$(jq -r '.name' "$oldPackageJson")" '.name = $var' packages/core/package.json \
+	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
-	tmp=$(mktemp)
-	jq --argjson bin "$(jq -r '.bin' "$oldPackageJson")" '.scripts += $bin' packages/core/package.json > "$tmp" && mv "$tmp" packages/core/package.json
+	jq --argjson bin "$(jq -r '.bin' "$oldPackageJson")" '.scripts += $bin' packages/core/package.json \
+	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
-	tmp=$(mktemp)
-	jq --arg var "$(jq -r '.description' "$oldPackageJson")" '.description = $var' packages/core/package.json > "$tmp" && mv "$tmp" packages/core/package.json
+	jq --arg var "$(jq -r '.description' "$oldPackageJson")" '.description = $var' packages/core/package.json \
+	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
-	tmp=$(mktemp)
-	jq --argjson var "$(jq -r '.bin' "$oldPackageJson")" '.bin = $var' packages/core/package.json > "$tmp" && mv "$tmp" packages/core/package.json
+	jq --argjson var "$(jq -r '.bin' "$oldPackageJson")" '.bin = $var' packages/core/package.json \
+	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
-	tmp=$(mktemp)
-	jq --arg var "$(jq -r '.bin' "$oldPackageJson")" '.scripts = $var' packages/core/package.json > "$tmp" && mv "$tmp" packages/core/package.json
+	jq --arg var "$(jq -r '.bin' "$oldPackageJson")" '.scripts = $var' packages/core/package.json \
+	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
-	tmp=$(mktemp)
-	jq --arg var "$(jq -r '.oclif.bin' "$oldPackageJson")" '.oclif.bin = $var' packages/core/package.json > "$tmp" && mv "$tmp" packages/core/package.json
+	jq --arg var "$(jq -r '.oclif.bin' "$oldPackageJson")" '.oclif.bin = $var' packages/core/package.json \
+	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 }
