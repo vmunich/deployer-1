@@ -61,7 +61,7 @@ update_core_merge_from_upstream()
 {
 	heading "Merging from upstream..."
 	git checkout -b update/"$UPSTREAM_VERSION"
-	git merge upstream/master
+	git merge upstream/master > /dev/null 2>&1
 	info "Done"
 }
 
@@ -134,7 +134,7 @@ update_core_commit_changes()
 	git add packages/core/bin/config/testnet/plugins.js
 	git add packages/core/package.json
 	git add packages/crypto/src/networks/devnet/genesisBlock.json
-	git add http://packages/crypto/src/networks/devnet/milestones.json
+	git add packages/crypto/src/networks/devnet/milestones.json
 	git add packages/crypto/src/networks/mainnet/exceptions.json
 	git add packages/crypto/src/networks/mainnet/genesisBlock.json
 	git add packages/crypto/src/networks/mainnet/milestones.json
