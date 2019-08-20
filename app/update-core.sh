@@ -16,24 +16,22 @@ update_core_handle()
 
 	update_core_update_package_json
 
+	update_core_commit_changes
+
 	heading "Done"
 
 	heading "Building Core..."
 
 	yarn setup
 
-	# git add --all
-	# git commit --no-verify -m 'chore: upgrade bridgechain'
-	# git push --no-verify
-
 }
 
 update_core_resolve_vars()
 {
 	UPSTREAM_VERSION=$(curl -s https://raw.githubusercontent.com/ArkEcosystem/core/master/packages/core/package.json | jq -r '.version')
-	CHAIN_VERSION=$(jq -r '.version' "$HOME/core-bridgechain/packages/core/package.json")
+	BRIDGECHAIN_BIN=$(jq -r '.oclif.bin' "$BRIDGECHAIN_PATH/packages/core/package.json")
+	CHAIN_VERSION=$(jq -r '.version' "$BRIDGECHAIN_PATH/packages/core/package.json")
 	NETWORKS_PATH="$BRIDGECHAIN_PATH/packages/crypto/src/networks"
-	BRIDGECHAIN_BIN=$(jq -r '.oclif.bin' "$HOME/core-bridgechain/packages/core/package.json")
 }
 
 update_core_check_bridgechain_version()
@@ -54,7 +52,7 @@ update_core_check_bridgechain_version()
 update_core_add_upstream_remote()
 {
 	heading "Fetching from upstream..."
-	cd $HOME/core-bridgechain
+	cd "$BRIDGECHAIN_PATH"
 	git remote add upstream https://github.com/ArkEcosystem/core.git > /dev/null 2>&1
 	git fetch upstream
 }
@@ -127,4 +125,23 @@ update_core_update_package_json()
 	# do we need this step?
 	# sed "s/@arkecosystem/@$BRIDGECHAIN_BIN/g" packages/core/package.json > packages/core/package.json.tmp \
 	# && mv packages/core/package.json.tmp packages/core/package.json
+}
+
+update_core_commit_changes()
+{
+	git add install.sh
+	git add packages/core/bin/config/mainnet/plugins.js
+	git add packages/core/bin/config/testnet/plugins.js
+	git add packages/core/package.json
+	git add packages/crypto/src/networks/devnet/genesisBlock.json
+	git add http://packages/crypto/src/networks/devnet/milestones.json
+	git add packages/crypto/src/networks/mainnet/exceptions.json
+	git add packages/crypto/src/networks/mainnet/genesisBlock.json
+	git add packages/crypto/src/networks/mainnet/milestones.json
+	git add packages/crypto/src/networks/testnet/genesisBlock.json
+	git add packages/crypto/src/networks/testnet/milestones.json
+
+	git commit --no-verify -m "chore: upgrade to core v$UPSTREAM_VERSION"
+
+	# git push --no-verify
 }
