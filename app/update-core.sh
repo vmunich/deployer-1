@@ -31,13 +31,9 @@ update_core_handle()
 update_core_resolve_vars()
 {
 	UPSTREAM_VERSION=$(curl -s https://raw.githubusercontent.com/ArkEcosystem/core/master/packages/core/package.json | jq -r '.version')
-	heading "$UPSTREAM_VERSION"
 	CHAIN_VERSION=$(jq -r '.version' "$HOME/core-bridgechain/packages/core/package.json")
-	heading "$CHAIN_VERSION"
 	NETWORKS_PATH="$BRIDGECHAIN_PATH/packages/crypto/src/networks"
-	heading "$NETWORKS_PATH"
 	BRIDGECHAIN_BIN=$(jq -r '.oclif.bin' "$HOME/core-bridgechain/packages/core/package.json")
-	heading "$BRIDGECHAIN_BIN"
 }
 
 update_core_check_bridgechain_version()
@@ -128,6 +124,7 @@ update_core_update_package_json()
 	jq --arg var "$BRIDGECHAIN_BIN" '.oclif.bin = $var' packages/core/package.json \
 	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
-	sed "s/@arkecosystem/@$BRIDGECHAIN_BIN/g" packages/core/package.json > packages/core/package.json.tmp \
-	&& mv packages/core/package.json.tmp packages/core/package.json
+	# do we need this step?
+	# sed "s/@arkecosystem/@$BRIDGECHAIN_BIN/g" packages/core/package.json > packages/core/package.json.tmp \
+	# && mv packages/core/package.json.tmp packages/core/package.json
 }
