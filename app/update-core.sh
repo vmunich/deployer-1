@@ -103,27 +103,27 @@ update_core_change_block_reward_from_number_to_string()
 update_core_update_package_json()
 {
 	git checkout --ours packages/core/package.json && cat packages/core/package.json \
-	> packages/core/package.json.old && git checkout --theirs packages/core/package.json
+	>| packages/core/package.json.old && git checkout --theirs packages/core/package.json
 
 	oldPackageJson="packages/core/package.json.old"
 
 	jq --arg var "$(jq -r '.name' "$oldPackageJson")" '.name = $var' packages/core/package.json \
-	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
+	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
 	jq --argjson bin "$(jq -r '.bin' "$oldPackageJson")" '.scripts += $bin' packages/core/package.json \
-	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
+	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
 	jq --arg var "$(jq -r '.description' "$oldPackageJson")" '.description = $var' packages/core/package.json \
-	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
+	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
 	jq --argjson var "$(jq -r '.bin' "$oldPackageJson")" '.bin = $var' packages/core/package.json \
-	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
+	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
 	jq --arg var "$(jq -r '.bin' "$oldPackageJson")" '.scripts = $var' packages/core/package.json \
-	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
+	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
 	jq --arg var "$(jq -r '.oclif.bin' "$oldPackageJson")" '.oclif.bin = $var' packages/core/package.json \
-	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
+	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
 	rm "oldPackageJson"
 }
