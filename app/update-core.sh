@@ -110,13 +110,13 @@ update_core_update_package_json()
 	jq --arg var "$(jq -r '.name' "$oldPackageJson")" '.name = $var' packages/core/package.json \
 	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
-	jq -r --argjson bin "$(jq -r '.bin' "$oldPackageJson")" '.scripts += $bin' packages/core/package.json \
+	jq --argjson var "$(jq -r '.bin' "$oldPackageJson")" '.bin = $var' packages/core/package.json \
+	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
+
+	jq -r --argjson var "$(jq -r '.bin' "$oldPackageJson")" '.scripts += $var' packages/core/package.json \
 	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
 	jq --arg var "$(jq -r '.description' "$oldPackageJson")" '.description = $var' packages/core/package.json \
-	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
-
-	jq --argjson var "$(jq -r '.bin' "$oldPackageJson")" '.bin = $var' packages/core/package.json \
 	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
 	jq --arg var "$(jq -r '.bin' "$oldPackageJson")" '.scripts = $var' packages/core/package.json \
