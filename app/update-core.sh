@@ -102,10 +102,10 @@ update_core_change_block_reward_from_number_to_string()
 
 update_core_update_package_json()
 {
-	oldPackageJson=$(mktemp)
-	
-	git checkout --ours packages/core/package.json && cat packages/core/package.json > "$oldPackageJson" \
-	&& git checkout --theirs packages/core/package.json
+	git checkout --ours packages/core/package.json && cat packages/core/package.json \
+	> packages/core/package.json.old && git checkout --theirs packages/core/package.json
+
+	oldPackageJson="packages/core/package.json.old"
 
 	jq --arg var "$(jq -r '.name' "$oldPackageJson")" '.name = $var' packages/core/package.json \
 	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
@@ -124,4 +124,6 @@ update_core_update_package_json()
 
 	jq --arg var "$(jq -r '.oclif.bin' "$oldPackageJson")" '.oclif.bin = $var' packages/core/package.json \
 	> packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
+
+	rm "oldPackageJson"
 }
