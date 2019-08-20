@@ -32,6 +32,8 @@ update_core_resolve_vars()
 {
 	UPSTREAM_VERSION=$(curl -s https://raw.githubusercontent.com/ArkEcosystem/core/master/packages/core/package.json | jq -r '.version')
 	CHAIN_VERSION=$(jq -r '.version' $HOME/core-bridgechain/packages/core/package.json)
+	NETWORKS_PATH="$BRIDGECHAIN_PATH/packages/crypto/src/networks"
+	BRIDGECHAIN_BIN=$(jq -r '.oclif.bin' "$oldPackageJson")
 }
 
 update_core_check_bridgechain_version()
@@ -69,13 +71,13 @@ update_core_merge_from_upstream()
 update_core_resolve_conflicts()
 {
 	heading "Resolving merge conflicts..."
-	git checkout --ours packages/crypto/src/networks/devnet/genesisBlock.json
-	git checkout --ours packages/crypto/src/networks/devnet/milestones.json
-	git checkout --ours packages/crypto/src/networks/mainnet/exceptions.json
-	git checkout --ours packages/crypto/src/networks/mainnet/genesisBlock.json
-	git checkout --ours packages/crypto/src/networks/mainnet/milestones.json
-	git checkout --ours packages/crypto/src/networks/testnet/genesisBlock.json
-	git checkout --ours packages/crypto/src/networks/testnet/milestones.json
+	git checkout --ours "$NETWORKS_PATH/devnet/genesisBlock.json"
+	git checkout --ours "$NETWORKS_PATH/devnet/milestones.json"
+	git checkout --ours "$NETWORKS_PATH/mainnet/exceptions.json"
+	git checkout --ours "$NETWORKS_PATH/mainnet/genesisBlock.json"
+	git checkout --ours "$NETWORKS_PATH/mainnet/milestones.json"
+	git checkout --ours "$NETWORKS_PATH/testnet/genesisBlock.json"
+	git checkout --ours "$NETWORKS_PATH/testnet/milestones.json"
 	git checkout --theirs packages/core/bin/config/mainnet/plugins.js
 	git checkout --theirs packages/core/bin/config/testnet/plugins.js
 	git checkout --ours install.sh
@@ -84,20 +86,20 @@ update_core_resolve_conflicts()
 
 update_core_change_block_reward_from_number_to_string()
 {
-	jq '.reward = "0"' packages/crypto/src/networks/mainnet/genesisBlock.json \
-	> packages/crypto/src/networks/mainnet/genesisBlock.json.tmp \
-	&& mv packages/crypto/src/networks/mainnet/genesisBlock.json.tmp \
-	packages/crypto/src/networks/mainnet/genesisBlock.json
+	jq '.reward = "0"' "$NETWORKS_PATH/mainnet/genesisBlock.json" \
+	> "$NETWORKS_PATH/mainnet/genesisBlock.json.tmp" \
+	&& mv "$NETWORKS_PATH/mainnet/genesisBlock.json.tmp" \
+	"$NETWORKS_PATH/mainnet/genesisBlock.json"
 
-	jq '.reward = "0"' packages/crypto/src/networks/devnet/genesisBlock.json \
-	> packages/crypto/src/networks/devnet/genesisBlock.json.tmp \
-	&& mv packages/crypto/src/networks/devnet/genesisBlock.json.tmp \
-	packages/crypto/src/networks/devnet/genesisBlock.json
+	jq '.reward = "0"' "$NETWORKS_PATH/devnet/genesisBlock.json" \
+	> "$NETWORKS_PATH/devnet/genesisBlock.json.tmp" \
+	&& mv "$NETWORKS_PATH/devnet/genesisBlock.json.tmp" \
+	"$NETWORKS_PATH/devnet/genesisBlock.json"
 
-	jq '.reward = "0"' packages/crypto/src/networks/testnet/genesisBlock.json \
-	> packages/crypto/src/networks/testnet/genesisBlock.json.tmp \
-	&& mv packages/crypto/src/networks/testnet/genesisBlock.json.tmp \
-	packages/crypto/src/networks/testnet/genesisBlock.json
+	jq '.reward = "0"' "$NETWORKS_PATH/testnet/genesisBlock.json" \
+	> "$NETWORKS_PATH/testnet/genesisBlock.json.tmp" \
+	&& mv "$NETWORKS_PATH/testnet/genesisBlock.json.tmp" \
+	"$NETWORKS_PATH/testnet/genesisBlock.json"
 }
 
 update_core_update_package_json()
@@ -119,9 +121,9 @@ update_core_update_package_json()
 	jq --arg var "$(jq -r '.description' "$oldPackageJson")" '.description = $var' packages/core/package.json \
 	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
 
-	# jq --arg var "$(jq -r '.bin' "$oldPackageJson")" '.scripts = $var' packages/core/package.json \
-	# >| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
-
-	jq --arg var "$(jq -r '.oclif.bin' "$oldPackageJson")" '.oclif.bin = $var' packages/core/package.json \
+	jq --arg var "$BRIDGECHAIN_BIN" '.oclif.bin = $var' packages/core/package.json \
 	>| packages/core/package.json.tmp && mv packages/core/package.json.tmp packages/core/package.json
+
+	sed "s/@arkecosystem/@$BRIDGECHAIN_BIN/g" packages/core/package.json > packages/core/package.json.tmp \
+	&& mv packages/core/package.json.tmp packages/core/package.json
 }
