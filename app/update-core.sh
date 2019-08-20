@@ -31,9 +31,13 @@ update_core_handle()
 update_core_resolve_vars()
 {
 	UPSTREAM_VERSION=$(curl -s https://raw.githubusercontent.com/ArkEcosystem/core/master/packages/core/package.json | jq -r '.version')
+	heading "$UPSTREAM_VERSION"
 	CHAIN_VERSION=$(jq -r '.version' $HOME/core-bridgechain/packages/core/package.json)
+	heading "$CHAIN_VERSION"
 	NETWORKS_PATH="$BRIDGECHAIN_PATH/packages/crypto/src/networks"
+	heading "$NETWORKS_PATH"
 	BRIDGECHAIN_BIN=$(jq -r '.oclif.bin' "$oldPackageJson")
+	heading "$BRIDGECHAIN_BIN"
 }
 
 update_core_check_bridgechain_version()
